@@ -351,9 +351,11 @@ _resolve( dns_unbound_ub_ctx *ctx, SV *name, int type, int class = 1 )
         RETVAL
 
 BOOT:
-    HV *stash = gv_stashpv("DNS::Unbound", FALSE);
 #if HAS_UB_VERSION
-    newCONSTSUB(stash, "unbound_version", newSVpv( ub_version(), 0 ));
+    if (!perl_get_cv("DNS::Unbound::unbound_version", FALSE)) {
+      HV *stash = gv_stashpv("DNS::Unbound", FALSE);        
+      newCONSTSUB(stash, "unbound_version", newSVpv( ub_version(), 0 ));
+    }
 #endif
 
 void
